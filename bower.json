@@ -1,0 +1,17 @@
+{
+  "name": "tipi.component.top-bar",
+  "homepage": "https://github.com/toolbarthomas/tipi.component.top-bar",
+  "authors": [
+    "Thomas van der Velde <contact@toolbarthomas.net>"
+  ],
+  "description": "Sticky top bar for Tipi ",
+  "keywords": [
+    "toolbarthomas",
+    "modular",
+    "tipi",
+    "topbar",
+    "sticky"
+  ],
+  "license": "MIT",
+  "main": "_tipi.component.top-bar.scss"
+}

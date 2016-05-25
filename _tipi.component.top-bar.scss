@@ -1,0 +1,17 @@
+/// The Top-Bar component is used to display a block on the top
+/// of the page. Usually we use this element to display the menu
+/// and branding of the website.
+///
+/// @requires js 'tipi.ui.top-bar.js'
+/// @author toolbarthomas
+/// @since 1.0
+///
+/// @example html
+/// <div class="top-bar">
+/// 	{{content}}
+///	</div>
+
+@import "__core";
+@import "__config";
+
+@include core_top-bar;
