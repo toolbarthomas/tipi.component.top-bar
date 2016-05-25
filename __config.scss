@@ -1,10 +1,10 @@
-$top-bar-z-index: 350;
-$top-bar-gutter: 15px;
-$top-bar-gutter--autosize: false;
+$top-bar-z-index: 350 !default;
+$top-bar-gutter: 15px !default;
+$top-bar-gutter--autosize: false !default;
 
-$top-bar-sticky: false;
-$top-bar-autosize: false;
-$top-bar-autohide: false;
-$top-bar-peek: false;
+$top-bar-sticky: false !default;
+$top-bar-autosize: false !default;
+$top-bar-autohide: false !default;
+$top-bar-peek: false !default;
 
-$drawer-support: true;
+$drawer-support: true !default;
