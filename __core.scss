@@ -9,10 +9,6 @@
 			padding: $top-bar-gutter 0;
 		}
 
-		@if $top-bar-background-color != transparent {
-			background: $top-bar-background-color;
-		}
-
 		&.__top-bar--ready {
 			@if $top-bar-sticky {
 				position: fixed;
