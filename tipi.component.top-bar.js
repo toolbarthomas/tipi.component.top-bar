@@ -4,11 +4,11 @@ function setTopBar(heightElement, pushElement) {
 		small 	: '__top-bar--small',
 		hidden 	: '__top-bar--hidden',
 		peek 	: '__top-bar--peek'
-	}
+	};
 
 	var topBarDataAttributes = {
 		position : 'top-bar-position'
-	}
+	};
 
 	var topBar = $('.top-bar').not('.' + topBarStates.ready);
 	if(topBar.length > 0 ) {
@@ -32,7 +32,7 @@ function setTopBar(heightElement, pushElement) {
 		//Bind the custom events on the top bar so we trigger it with other functions
 		topBar.on({
 			'tipi.ui.topBar.toggle' : function(event)  {
-				toggleTopBar(topBar, topBarStates, topBarDataAttributes)
+				toggleTopBar(topBar, topBarStates, topBarDataAttributes);
 			},
 
 			'tipi.ui.topBar.resize' : function(event) {
@@ -56,6 +56,7 @@ function setTopBar(heightElement, pushElement) {
 		});
 
 		topBar.addClass(topBarStates.ready);
+		$('body').addClass(topBarStates.ready);
 		topBar.data(topBarDataAttributes.position, 0);
 
 		topBar.trigger('tipi.ui.topBar.resize');

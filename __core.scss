@@ -5,10 +5,6 @@
 		right: 0;
 		z-index: $top-bar-z-index;
 
-		@if $top-bar-gutter != false {
-			padding: $top-bar-gutter 0;
-		}
-
 		&.__top-bar--ready {
 			@if $top-bar-sticky {
 				position: fixed;
@@ -23,12 +19,6 @@
 			);
 		}
 		@if $top-bar-sticky {
-			@if $top-bar-autosize == true {
-			&.__top-bar--small {
-					padding: $top-bar-gutter--autosize 0;
-				}
-			}
-
 			@if $top-bar-autohide == true {
 				&.__top-bar--hidden {
 					@include transform(translateY(-100%));
