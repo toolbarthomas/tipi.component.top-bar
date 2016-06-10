@@ -3,11 +3,12 @@ function setTopBar(heightElement, pushElement) {
 		ready 	: '__top-bar--ready',
 		small 	: '__top-bar--small',
 		hidden 	: '__top-bar--hidden',
-		peek 	: '__top-bar--peek'
+		peek 	: '__top-bar--peek',
+		reset 	: '__top-bar--reset'
 	};
 
 	var topBarDataAttributes = {
-		position : 'top-bar-position'
+		position 		: 'top-bar-position'
 	};
 
 	var topBar = $('.top-bar').not('.' + topBarStates.ready);
@@ -19,6 +20,9 @@ function setTopBar(heightElement, pushElement) {
 				topBarHeightElement = heightElement;
 			}
 		}
+
+		//Define the heightElement with an extra class so we trigger it with css.
+		topBarHeightElement.addClass('top-bar-height-element');
 
 		//Define the push location for the topBar so it won't overlap other elements by default.
 		topBar.after('<div class="top-bar-push-fallback"></div>');
@@ -36,7 +40,7 @@ function setTopBar(heightElement, pushElement) {
 			},
 
 			'tipi.ui.topBar.resize' : function(event) {
-				resizeTopBar(topBarHeightElement, topBarPushElement);
+				resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBarStates, topBarDataAttributes);
 			}
 		});
 
@@ -74,14 +78,18 @@ function toggleTopBar(topBar, topBarStates, topBarDataAttributes) {
 		scrollTop : theWindow.scrollTop()
 	};
 
-	//When the scrollTop of the Window is between the between 50% and 100% of the Window height we make it smaller.
-	if(theWindow_properties.scrollTop > theWindow_properties.height / 2 && theWindow_properties.scrollTop <= theWindow_properties.height) {
+	//When the scrollTop of the Window is higher than 50% of the Window height we make it smaller.
+	if(theWindow_properties.scrollTop > theWindow_properties.height / 2) {
 		topBar.removeClass(topBarStates.hidden).addClass(topBarStates.small);
 	}
+
 	//When the scrollTop of the Window is beyond 100% of the Window Height then we hide it
-	else if(theWindow_properties.scrollTop > theWindow_properties.height) {
-		topBar.removeClass(topBarStates.small).addClass(topBarStates.hidden);
+	if(theWindow_properties.scrollTop > theWindow_properties.height) {
+		topBar.addClass(topBarStates.hidden);
 	}
+
+
+
 	//Reset the top bar when reached the top of the Document
 	else {
 		topBar.removeClass(topBarStates.small);
@@ -101,13 +109,18 @@ function toggleTopBar(topBar, topBarStates, topBarDataAttributes) {
 	}
 }
 
-function resizeTopBar(topBarHeightElement, topBarPushElement) {
+function resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBarStates, topBarDataAttributes) {
+	topBarHeightElement.addClass(topBarStates.reset);
+	topBarHeightElement.removeClass(topBarStates.small);
+
 	var topBarHeight = topBarHeightElement.outerHeight();
 	if(topBarHeight <= 0) {
 		topBarHeight = '';
 	}
 
-	topBarPushElement.css({
+	topBarPushElement.animate({
 		'height' : topBarHeight
+	}, function() {
+		topBarHeightElement.removeClass(topBarStates.reset);
 	});
 }

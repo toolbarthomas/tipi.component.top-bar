@@ -18,6 +18,7 @@
 				(all $transition-fast ease-out 0s)
 			);
 		}
+
 		@if $top-bar-sticky {
 			@if $top-bar-autohide == true {
 				&.__top-bar--hidden {
@@ -33,5 +34,14 @@
 		}
 
 		@include clear(true, false);
+	}
+
+	.top-bar-height-element {
+		&.__top-bar--reset {
+			&,
+			* {
+				@include transition(none !important);
+			}
+		}
 	}
 }
