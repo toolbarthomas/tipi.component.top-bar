@@ -8,7 +8,8 @@ function setTopBar(heightElement, pushElement) {
 	};
 
 	var topBarDataAttributes = {
-		position 		: 'top-bar-position'
+		position 		: 'top-bar-position',
+		originalHeight	: 'top-bar-original-height'
 	};
 
 	var topBar = $('.top-bar').not('.' + topBarStates.ready);
@@ -78,25 +79,18 @@ function toggleTopBar(topBar, topBarStates, topBarDataAttributes) {
 		scrollTop : theWindow.scrollTop()
 	};
 
-	//When the scrollTop of the Window is higher than 50% of the Window height we make it smaller.
-	if(theWindow_properties.scrollTop > theWindow_properties.height / 2) {
-		topBar.removeClass(topBarStates.hidden).addClass(topBarStates.small);
+	//When the scrollTop of the Window is higher than the position + height of the top bar then we can we make it smaller.
+	if(theWindow_properties.scrollTop > (topBar.position().top + topBar.data(topBarDataAttributes.originalHeight))) {
+		topBar.addClass(topBarStates.small);
+	} else {
+		topBar.removeClass(topBarStates.small);
 	}
 
 	//When the scrollTop of the Window is beyond 100% of the Window Height then we hide it
 	if(theWindow_properties.scrollTop > theWindow_properties.height) {
 		topBar.addClass(topBarStates.hidden);
-	}
-
-
-
-	//Reset the top bar when reached the top of the Document
-	else {
-		topBar.removeClass(topBarStates.small);
+	} else {
 		topBar.removeClass(topBarStates.hidden);
-		topBar.removeClass(topBarStates.peek);
-
-		topBar.data(topBarDataAttributes.position, 0);
 	}
 
 	topBar.removeClass(topBarStates.peek);
@@ -107,6 +101,11 @@ function toggleTopBar(topBar, topBarStates, topBarDataAttributes) {
 	if(theWindow_properties.scrollTop < topBarPositionCache) {
 		topBar.addClass(topBarStates.peek);
 	}
+
+	//Reset the top bar when reached the top of the Document
+	if(theWindow_properties.scrollTop < (topBar.position().top + topBar.data(topBarDataAttributes.originalHeight))) {
+		topBar.data(topBarDataAttributes.position, 0);
+	}
 }
 
 function resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBarStates, topBarDataAttributes) {
@@ -114,13 +113,15 @@ function resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBar
 	topBarHeightElement.removeClass(topBarStates.small);
 
 	var topBarHeight = topBarHeightElement.outerHeight();
+	topBar.data(topBarDataAttributes.originalHeight, topBarHeight);
+
 	if(topBarHeight <= 0) {
 		topBarHeight = '';
 	}
 
-	topBarPushElement.animate({
+	topBarPushElement.stop().animate({
 		'height' : topBarHeight
-	}, function() {
+	}, 500, function() {
 		topBarHeightElement.removeClass(topBarStates.reset);
 	});
 }
