@@ -24,11 +24,11 @@
 				&.__top-bar--hidden {
 					@include transform(translateY(-100%));
 				}
-			}
 
-			@if $top-bar-peek == true {
-				&.__top-bar--peek {
-					@include transform(translateY(0));
+				@if $top-bar-peek == true {
+					&.__top-bar--peek {
+						@include transform(translateY(0));
+					}
 				}
 			}
 		}

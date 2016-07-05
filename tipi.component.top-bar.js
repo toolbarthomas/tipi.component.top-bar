@@ -36,12 +36,24 @@ function setTopBar(heightElement, pushElement) {
 
 		//Bind the custom events on the top bar so we trigger it with other functions
 		topBar.on({
-			'tipi.ui.topBar.toggle' : function(event)  {
+			'tipi.topBar.TOGGLE' : function(event)  {
 				toggleTopBar(topBar, topBarStates, topBarDataAttributes);
 			},
-
-			'tipi.ui.topBar.resize' : function(event) {
+			'tipi.topBar.RESIZE' : function(event) {
 				resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBarStates, topBarDataAttributes);
+
+				//Trigger tipi.UPDATE so we can UPDATE OTHER components except this one.
+				$(document).trigger('tipi.UPDATE', [false]);
+			}
+		});
+
+		$(document).on({
+			'tipi.UPDATE' : function(event, external) {
+				if(typeof external !== undefined) {
+					if(external === true) {
+						topBar.trigger('tipi.topBar.RESIZE');
+					}
+				}
 			}
 		});
 
@@ -50,13 +62,13 @@ function setTopBar(heightElement, pushElement) {
 			resize : function() {
 				clearTimeout(updateEvent);
 				updateEvent = setTimeout(function() {
-					topBar.trigger('tipi.ui.topBar.resize');
-					topBar.trigger('tipi.ui.topBar.toggle');
+					topBar.trigger('tipi.topBar.RESIZE');
+					topBar.trigger('tipi.topBar.TOGGLE');
 				}, 100);
 			},
 
 			scroll : function() {
-				topBar.trigger('tipi.ui.topBar.toggle');
+				topBar.trigger('tipi.topBar.TOGGLE');
 			}
 		});
 
@@ -64,8 +76,8 @@ function setTopBar(heightElement, pushElement) {
 		$('body').addClass(topBarStates.ready);
 		topBar.data(topBarDataAttributes.position, 0);
 
-		topBar.trigger('tipi.ui.topBar.resize');
-		topBar.trigger('tipi.ui.topBar.toggle');
+		topBar.trigger('tipi.topBar.RESIZE');
+		topBar.trigger('tipi.topBar.TOGGLE');
 	}
 }
 
