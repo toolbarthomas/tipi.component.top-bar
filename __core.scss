@@ -15,19 +15,33 @@
 			top: 0;
 
 			@include transition(
-				(all $transition-fast ease-out 0s)
+				(all $top-bar-transition-speed ease-out 0s)
 			);
 		}
 
 		@if $top-bar-sticky {
 			@if $top-bar-autohide == true {
 				&.__top-bar--hidden {
+					opacity: 0;
+					visibility: hidden;
 					@include transform(translateY(-100%));
+
+					@include transition(
+						(all $top-bar-transition-speed ease-out 0s),
+						(opacity $top-bar-transition-speed ease-out 0s),
+						(visibility 0s ease-out $top-bar-transition-speed)
+					);
 				}
 
 				@if $top-bar-peek == true {
 					&.__top-bar--peek {
 						@include transform(translateY(0));
+
+						@include transition(
+							(all $top-bar-transition-speed ease-out 0s),
+							(opacity $top-bar-transition-speed ease-out 0s),
+							(visibility 0s ease-out 0s)
+						);
 					}
 				}
 			}
