@@ -35,6 +35,8 @@
 
 				@if $top-bar-peek == true {
 					&.__top-bar--peek {
+						opacity: 1;
+						visibility: visible;
 						@include transform(translateY(0));
 
 						@include transition(
