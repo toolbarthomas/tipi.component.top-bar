@@ -1,4 +1,4 @@
-function setTopBar(heightElement, pushElement) {
+function setTopBar(pushElement, smallElement) {
 	var topBarStates = {
 		ready 	: '__top-bar--ready',
 		small 	: '__top-bar--small',
@@ -14,17 +14,6 @@ function setTopBar(heightElement, pushElement) {
 
 	var topBar = $('.top-bar').not('.' + topBarStates.ready);
 	if(topBar.length > 0 ) {
-		//Define the element so we can calculate the required height for the topBar.
-		var topBarHeightElement = topBar;
-		if(typeof heightElement !== 'undefined') {
-			if(heightElement.length > 0 ) {
-				topBarHeightElement = heightElement;
-			}
-		}
-
-		//Define the heightElement with an extra class so we trigger it with css.
-		topBarHeightElement.addClass('top-bar-height-element');
-
 		//Define the push location for the topBar so it won't overlap other elements by default.
 		topBar.after('<div class="top-bar-push-fallback"></div>');
 		var topBarPushElement = $('.top-bar-push-fallback'); //By default we use the fallback so we always have a pushing element.
@@ -34,13 +23,21 @@ function setTopBar(heightElement, pushElement) {
 			}
 		}
 
+		//Define the element we need for setting the small state
+		var topBarSmallElement = topBar;
+		if(typeof smallElement != 'undefined') {
+			if(smallElement.length > 0) {
+				topBarSmallElement = smallElement;
+			}
+		}
+
 		//Bind the custom events on the top bar so we trigger it with other functions
 		topBar.on({
 			'tipi.topBar.TOGGLE' : function(event)  {
-				toggleTopBar(topBar, topBarStates, topBarDataAttributes);
+				toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttributes);
 			},
 			'tipi.topBar.RESIZE' : function(event) {
-				resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBarStates, topBarDataAttributes);
+				resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes);
 
 				//Trigger tipi.UPDATE so we can UPDATE OTHER components except this one.
 				$(document).trigger('tipi.UPDATE', [false]);
@@ -81,7 +78,7 @@ function setTopBar(heightElement, pushElement) {
 	}
 }
 
-function toggleTopBar(topBar, topBarStates, topBarDataAttributes) {
+function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttributes) {
 	var topBarPositionCache = parseInt(topBar.data(topBarDataAttributes.position));
 
 	var theWindow = $(window);
@@ -91,8 +88,18 @@ function toggleTopBar(topBar, topBarStates, topBarDataAttributes) {
 		scrollTop : theWindow.scrollTop()
 	};
 
+	//Set the correct height for the defined element for triggering the small state
+	var topBarSmallElementHeight = topBarSmallElement.outerHeight();
+	if(typeof topBarSmallElement.data(topBarDataAttributes.originalHeight) != 'undefined') {
+		if(parseInt(topBarSmallElement.data(topBarDataAttributes.originalHeight)) != 'NaN') {
+			topBarSmallElementHeight = topBarSmallElement.data(topBarDataAttributes.originalHeight);
+		}
+	}
+
+	//@TODO check the smallheight with the window height so that the top bar wont hide before it's small.
+
 	//When the scrollTop of the Window is higher than the position + height of the top bar then we can we make it smaller.
-	if(theWindow_properties.scrollTop > (topBar.position().top + topBar.data(topBarDataAttributes.originalHeight))) {
+	if(theWindow_properties.scrollTop > (topBarSmallElement.position().top + topBarSmallElementHeight)) {
 		topBar.addClass(topBarStates.small);
 	} else {
 		topBar.removeClass(topBarStates.small);
@@ -115,16 +122,17 @@ function toggleTopBar(topBar, topBarStates, topBarDataAttributes) {
 	}
 
 	//Reset the top bar when reached the top of the Document
-	if(theWindow_properties.scrollTop < (topBar.position().top + topBar.data(topBarDataAttributes.originalHeight))) {
+	if(theWindow_properties.scrollTop < (topBarSmallElement.position().top + topBarSmallElementHeight)) {
 		topBar.data(topBarDataAttributes.position, 0);
 	}
 }
 
-function resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBarStates, topBarDataAttributes) {
-	topBarHeightElement.addClass(topBarStates.reset);
-	topBarHeightElement.removeClass(topBarStates.small);
+function resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes) {
+	//Reset the height without transitions so we can calculate the original height.
+	topBar.addClass(topBarStates.reset);
+	topBar.removeClass(topBarStates.small);
 
-	var topBarHeight = topBarHeightElement.outerHeight();
+	var topBarHeight = topBar.outerHeight();
 	topBar.data(topBarDataAttributes.originalHeight, topBarHeight);
 
 	if(topBarHeight <= 0) {
@@ -134,6 +142,6 @@ function resizeTopBarPush(topBar, topBarHeightElement, topBarPushElement, topBar
 	topBarPushElement.stop().animate({
 		'height' : topBarHeight
 	}, 500, function() {
-		topBarHeightElement.removeClass(topBarStates.reset);
+		topBar.removeClass(topBarStates.reset);
 	});
 }
