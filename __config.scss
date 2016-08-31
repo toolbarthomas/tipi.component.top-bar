@@ -5,3 +5,5 @@ $top-bar-autohide: true !default;
 $top-bar-peek: true !default;
 
 $top-bar-transition-speed: 250ms !default;
+$top-bar-transition-timing: cubic-bezier(0, 0, 0, 1) !default;
+$top-bar-transition-delay: 0s !default;

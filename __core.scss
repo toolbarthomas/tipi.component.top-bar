@@ -2,7 +2,7 @@
 	.top-bar {
 		position: relative;
 		left: 0;
-		right: 0;
+		width: 100%;
 		z-index: $top-bar-z-index;
 
 		&.__top-bar--ready {
@@ -15,7 +15,7 @@
 			top: 0;
 
 			@include transition(
-				(all $top-bar-transition-speed ease-out 0s)
+				(all $top-bar-transition-speed ease-out $top-bar-transition-delay)
 			);
 		}
 
@@ -27,9 +27,9 @@
 					@include transform(translateY(-100%));
 
 					@include transition(
-						(all $top-bar-transition-speed ease-out 0s),
-						(opacity $top-bar-transition-speed ease-out 0s),
-						(visibility 0s ease-out $top-bar-transition-speed)
+						(all $top-bar-transition-speed $top-bar-transition-timing $top-bar-transition-delay),
+						(visibility 0s linear ($top-bar-transition-speed + $top-bar-transition-delay))
+
 					);
 				}
 
@@ -40,24 +40,21 @@
 						@include transform(translateY(0));
 
 						@include transition(
-							(all $top-bar-transition-speed ease-out 0s),
-							(opacity $top-bar-transition-speed ease-out 0s),
-							(visibility 0s ease-out 0s)
+							(all $top-bar-transition-speed $top-bar-transition-timing 0s),
+							(visibility 0s linear 0s)
 						);
 					}
 				}
 			}
 		}
 
-		@include clear(true, false);
-	}
-
-	.top-bar-height-element {
 		&.__top-bar--reset {
 			&,
 			* {
 				@include transition(none !important);
 			}
 		}
+
+		@include clear(true, false);
 	}
 }

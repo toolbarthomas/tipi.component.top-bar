@@ -70,7 +70,7 @@ function setTopBar(pushElement, smallElement) {
 		});
 
 		topBar.addClass(topBarStates.ready);
-		$('body').addClass(topBarStates.ready);
+		$('html').addClass(topBarStates.ready);
 		topBar.data(topBarDataAttributes.position, 0);
 
 		topBar.trigger('tipi.topBar.RESIZE');
@@ -88,6 +88,8 @@ function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttrib
 		scrollTop : theWindow.scrollTop()
 	};
 
+	topBar.data(topBarDataAttributes.position, theWindow_properties.scrollTop);
+
 	//Set the correct height for the defined element for triggering the small state
 	var topBarSmallElementHeight = topBarSmallElement.outerHeight();
 	if(typeof topBarSmallElement.data(topBarDataAttributes.originalHeight) != 'undefined') {
@@ -96,8 +98,6 @@ function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttrib
 		}
 	}
 
-	//@TODO check the smallheight with the window height so that the top bar wont hide before it's small.
-
 	//When the scrollTop of the Window is higher than the position + height of the top bar then we can we make it smaller.
 	if(theWindow_properties.scrollTop > (topBarSmallElement.position().top + topBarSmallElementHeight)) {
 		topBar.addClass(topBarStates.small);
@@ -105,20 +105,19 @@ function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttrib
 		topBar.removeClass(topBarStates.small);
 	}
 
-	//When the scrollTop of the Window is beyond 100% of the Window Height then we hide it
-	if(theWindow_properties.scrollTop > theWindow_properties.height) {
+	//When the scrollTop of the Window is beyond the smallElement ofsset times 2
+	if(theWindow_properties.scrollTop > ((topBarSmallElement.position().top + topBarSmallElementHeight) * 2)) {
 		topBar.addClass(topBarStates.hidden);
 	} else {
 		topBar.removeClass(topBarStates.hidden);
 	}
 
-	topBar.removeClass(topBarStates.peek);
-
-	topBar.data(topBarDataAttributes.position, theWindow_properties.scrollTop);
-
 	//Set the peek state on the top-bar when the user scrolls upwards
 	if(theWindow_properties.scrollTop < topBarPositionCache) {
 		topBar.addClass(topBarStates.peek);
+	} else {
+		topBar.removeClass(topBarStates.peek);
+
 	}
 
 	//Reset the top bar when reached the top of the Document
