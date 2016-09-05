@@ -106,7 +106,7 @@ function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttrib
 	}
 
 	//When the scrollTop of the Window is beyond the smallElement ofsset times 2
-	if(theWindow_properties.scrollTop > ((topBarSmallElement.position().top + topBarSmallElementHeight) * 2)) {
+	if(theWindow_properties.scrollTop >= ((topBarSmallElement.position().top + topBarSmallElementHeight) * 2)) {
 		topBar.addClass(topBarStates.hidden);
 	} else {
 		topBar.removeClass(topBarStates.hidden);
