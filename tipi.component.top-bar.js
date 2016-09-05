@@ -80,34 +80,31 @@ function setTopBar(pushElement, smallElement) {
 }
 
 function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttributes) {
-	var topBarPositionCache = parseInt(topBar.data(topBarDataAttributes.position));
-
-	var theWindow = $(window);
-
-	var theWindow_properties = {
-		height : theWindow.height(),
-		scrollTop : theWindow.scrollTop()
+	var triggers = {
+		scrollTop : Math.ceil($(window).scrollTop()),
+		smallPosition : Math.ceil(topBarSmallElement.position().top),
+		smallHeight : Math.ceil(topBarSmallElement.outerHeight()),
 	};
 
-	topBar.data(topBarDataAttributes.position, theWindow_properties.scrollTop);
+	var topBarPositionCache = parseInt(Math.ceil(topBar.data(topBarDataAttributes.position)));
+	topBar.data(topBarDataAttributes.position, triggers.scrollTop);
 
 	//Set the correct height for the defined element for triggering the small state
-	var topBarSmallElementHeight = topBarSmallElement.outerHeight();
 	if(typeof topBarSmallElement.data(topBarDataAttributes.originalHeight) != 'undefined') {
 		if(parseInt(topBarSmallElement.data(topBarDataAttributes.originalHeight)) != 'NaN') {
-			topBarSmallElementHeight = topBarSmallElement.data(topBarDataAttributes.originalHeight);
+			triggers.smallHeight = topBarSmallElement.data(topBarDataAttributes.originalHeight);
 		}
 	}
 
 	//When the scrollTop of the Window is higher than the position + height of the top bar then we can we make it smaller.
-	if(theWindow_properties.scrollTop > (topBarSmallElement.position().top + topBarSmallElementHeight)) {
+	if(triggers.scrollTop >= (triggers.smallPosition + triggers.smallHeight)) {
 		topBar.addClass(topBarStates.small);
 	} else {
 		topBar.removeClass(topBarStates.small);
 	}
 
 	//When the scrollTop of the Window is beyond the smallElement ofsset times 2
-	if(theWindow_properties.scrollTop >= ((topBarSmallElement.position().top + topBarSmallElementHeight) * 2)) {
+	if(triggers.scrollTop >= ((triggers.smallPosition + triggers.smallHeight) * 2)) {
 		if(!topBar.hasClass(topBarStates.upwards)) {
 			topBar.addClass(topBarStates.hidden);
 		}
@@ -116,16 +113,17 @@ function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttrib
 	}
 
 	//Set the peek state on the top-bar when the user scrolls upwards
-	if(theWindow_properties.scrollTop < topBarPositionCache) {
+	if(triggers.scrollTop < topBarPositionCache) {
 		topBar.addClass(topBarStates.peek + ' ' + topBarStates.upwards);
 	} else {
 		topBar.removeClass(topBarStates.peek + ' ' + topBarStates.upwards);
 	}
 
 	//Reset the top bar when reached the top of the Document
-	if(theWindow_properties.scrollTop <= 0) {
+	if(triggers.scrollTop <= 0) {
 		topBar.data(topBarDataAttributes.position, 0).removeClass(topBarStates.upwards);
 	}
+
 }
 
 function resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes) {
