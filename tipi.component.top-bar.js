@@ -4,7 +4,8 @@ function setTopBar(pushElement, smallElement) {
 		small 	: '__top-bar--small',
 		hidden 	: '__top-bar--hidden',
 		peek 	: '__top-bar--peek',
-		reset 	: '__top-bar--reset'
+		reset 	: '__top-bar--reset',
+		upwards : '__top-bar-upwards'
 	};
 
 	var topBarDataAttributes = {
@@ -107,22 +108,23 @@ function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttrib
 
 	//When the scrollTop of the Window is beyond the smallElement ofsset times 2
 	if(theWindow_properties.scrollTop >= ((topBarSmallElement.position().top + topBarSmallElementHeight) * 2)) {
-		topBar.addClass(topBarStates.hidden);
+		if(!topBar.hasClass(topBarStates.upwards)) {
+			topBar.addClass(topBarStates.hidden);
+		}
 	} else {
 		topBar.removeClass(topBarStates.hidden);
 	}
 
 	//Set the peek state on the top-bar when the user scrolls upwards
 	if(theWindow_properties.scrollTop < topBarPositionCache) {
-		topBar.addClass(topBarStates.peek);
+		topBar.addClass(topBarStates.peek + ' ' + topBarStates.upwards);
 	} else {
-		topBar.removeClass(topBarStates.peek);
-
+		topBar.removeClass(topBarStates.peek + ' ' + topBarStates.upwards);
 	}
 
 	//Reset the top bar when reached the top of the Document
-	if(theWindow_properties.scrollTop < (topBarSmallElement.position().top + topBarSmallElementHeight)) {
-		topBar.data(topBarDataAttributes.position, 0);
+	if(theWindow_properties.scrollTop <= 0) {
+		topBar.data(topBarDataAttributes.position, 0).removeClass(topBarStates.upwards);
 	}
 }
 
