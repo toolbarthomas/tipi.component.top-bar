@@ -41,16 +41,18 @@ function setTopBar(pushElement, smallElement) {
 				resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes);
 
 				//Trigger tipi.UPDATE so we can UPDATE OTHER components except this one.
-				$(document).trigger('tipi.UPDATE', [false]);
+				$(document).trigger('tipi.UPDATE', [true]);
 			}
 		});
 
 		$(document).on({
-			'tipi.UPDATE' : function(event, external) {
-				if(typeof external !== undefined) {
-					if(external === true) {
-						topBar.trigger('tipi.topBar.RESIZE');
-					}
+			'tipi.UPDATE' : function(event, exclude) {
+				if(typeof exclude !== 'boolean') {
+					exclude = false;
+				}
+
+				if(!exclude) {
+					topBar.trigger('tipi.topBar.RESIZE');
 				}
 			}
 		});
@@ -140,7 +142,7 @@ function resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarS
 
 	topBarPushElement.stop().animate({
 		'height' : topBarHeight
-	}, 500, function() {
+	}, 250, function() {
 		topBar.removeClass(topBarStates.reset);
 	});
 }
