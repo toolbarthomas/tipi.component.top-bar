@@ -58,12 +58,17 @@ function setTopBar(pushElement, smallElement) {
 		});
 
 		var updateEvent;
+		var documentWidth = $(document).width();
 		$(window).on({
 			resize : function() {
 				clearTimeout(updateEvent);
 				updateEvent = setTimeout(function() {
-					topBar.trigger('tipi.topBar.RESIZE');
-					topBar.trigger('tipi.topBar.TOGGLE');
+					if(documentWidth != $(document).width()) {
+						topBar.trigger('tipi.topBar.RESIZE');
+						topBar.trigger('tipi.topBar.TOGGLE');
+					}
+
+					documentWidth = $(document).width();
 				}, 100);
 			},
 
