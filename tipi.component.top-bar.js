@@ -37,8 +37,8 @@ function setTopBar(pushElement, smallElement) {
 			'tipi.topBar.TOGGLE' : function(event)  {
 				toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttributes);
 			},
-			'tipi.topBar.RESIZE' : function(event) {
-				resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes);
+			'tipi.topBar.RESIZE' : function(event, resizeAnimationSpeed) {
+				resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes, resizeAnimationSpeed);
 			}
 		});
 
@@ -49,7 +49,7 @@ function setTopBar(pushElement, smallElement) {
 				clearTimeout(updateEvent);
 				updateEvent = setTimeout(function() {
 					if(documentWidth != $(document).width()) {
-						topBar.trigger('tipi.topBar.RESIZE');
+						topBar.trigger('tipi.topBar.RESIZE', [250]);
 						topBar.trigger('tipi.topBar.TOGGLE');
 					}
 
@@ -66,7 +66,7 @@ function setTopBar(pushElement, smallElement) {
 		$('html').addClass(topBarStates.ready);
 		topBar.data(topBarDataAttributes.position, 0);
 
-		topBar.trigger('tipi.topBar.RESIZE');
+		topBar.trigger('tipi.topBar.RESIZE', [0]);
 		topBar.trigger('tipi.topBar.TOGGLE');
 	}
 }
@@ -118,7 +118,7 @@ function toggleTopBar(topBar, topBarSmallElement, topBarStates, topBarDataAttrib
 
 }
 
-function resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes) {
+function resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarStates, topBarDataAttributes, resizeAnimationSpeed) {
 	//Reset the height without transitions so we can calculate the original height.
 	topBar.addClass(topBarStates.reset);
 	topBar.removeClass(topBarStates.small);
@@ -132,7 +132,7 @@ function resizeTopBarPush(topBar, topBarPushElement, topBarSmallElement, topBarS
 
 	topBarPushElement.stop().animate({
 		'height' : topBarHeight
-	}, 250, function() {
+	}, resizeAnimationSpeed, function() {
 		topBar.removeClass(topBarStates.reset);
 	});
 }
