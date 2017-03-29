@@ -67,8 +67,8 @@
 				clearTimeout(resize);
 				resize = setTimeout(function() {
 					if(document_width != $(document).width()) {
-						topBar.trigger('tipi.topBar.resize', [250]);
-						topBar.trigger('tipi.topBar.toggle');
+						top_bar.trigger('tipi.topBar.resize');
+						top_bar.trigger('tipi.topBar.toggle');
 					}
 
 					document_width = $(document).width();
@@ -88,7 +88,7 @@
 				//Set the default position to 0 since our document will be loaded
 				// top_bar.data(topBarDataAttributes.position, $(window).scroll);
 
-		top_bar.trigger('tipi.topBar.resize', [0]);
+		top_bar.trigger('tipi.topBar.resize');
 		top_bar.trigger('tipi.topBar.toggle');
 	}
 
